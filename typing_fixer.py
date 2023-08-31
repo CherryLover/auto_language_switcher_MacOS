@@ -11,6 +11,7 @@ listen = True
 listen_lock = Lock()
 keys_pressed_lock = Lock()
 keyboard_controller = keyboard.Controller()
+last_press_key = keyboard.Key.space
 
 
 # functions:
@@ -48,7 +49,7 @@ def register_key(key: keyboard.Key) -> None:
     :param key: pynput.keyboard.Key
     :return: None
     """
-    global keys_pressed, listen_lock, listen
+    global keys_pressed, listen_lock, listen, last_press_key
     if not listen:
         return
 
@@ -67,6 +68,13 @@ def register_key(key: keyboard.Key) -> None:
                 keys_pressed.pop()
             else:
                 keys_pressed = []
+
+    print("keys pressed: ", str(keys_pressed) +" current print key: "+ str(key) +" key char ")
+
+    if key == keyboard.Key.tab and last_press_key == keyboard.Key.cmd:
+        print('try to change current window')
+    
+    last_press_key = key
 
     # Check if the activation keys were pressed, if so, re-write the stack:
     if keys_pressed and (len(keys_pressed) > ACTIVATION_SIZE):
