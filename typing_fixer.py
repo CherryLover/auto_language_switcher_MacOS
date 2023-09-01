@@ -4,6 +4,7 @@ from threading import Lock
 
 from pynput import keyboard, mouse
 from utils import *
+from window_change_actor import window_change_by_keyboard_press
 
 # threading globals:
 keys_pressed = []
@@ -70,11 +71,15 @@ def register_key(key: keyboard.Key) -> None:
                 keys_pressed = []
 
     print("keys pressed: ", str(keys_pressed) +" current print key: "+ str(key) +" key char ")
-
-    if key == keyboard.Key.tab and last_press_key == keyboard.Key.cmd:
-        print('try to change current window')
     
-    last_press_key = key
+    if(last_press_key == keyboard.Key.cmd and key == keyboard.Key.tab):
+        print('try to change current window')
+        # thread sleep for 1 second to prevent the window change spend too much long time
+        time.sleep(0.5)
+        window_change_by_keyboard_press()
+        reset_board_keys
+    else:
+        last_press_key = key
 
     # Check if the activation keys were pressed, if so, re-write the stack:
     if keys_pressed and (len(keys_pressed) > ACTIVATION_SIZE):
@@ -85,8 +90,7 @@ def register_key(key: keyboard.Key) -> None:
 
             re_write_stack()
 
-
-def reset_keys(x, y, button, pressed) -> None:
+def reset_board_keys() -> None:
     global keys_pressed, keys_pressed_lock
     """
     Empties the keys stack.
@@ -94,6 +98,9 @@ def reset_keys(x, y, button, pressed) -> None:
     with keys_pressed_lock:
         keys_pressed = []
 
+
+def reset_keys(x, y, button, pressed) -> None:
+    reset_board_keys()
 
 # main:
 if __name__ == '__main__':
