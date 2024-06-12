@@ -39,7 +39,7 @@ LAYOUT_RETURN_POSTFIX = ';\n    }\n)'
 # apple scripts:
 # listen key F8 preess
 CHANGE_LANGUAGE_SCRIPT = "osascript -e 'tell application \"System Events\" to tell process \"SystemUIServer\" to " \
-                         "key code 100' "
+                         "keystroke space using {control down}'"
 
 GET_CURRENT_LAYOUT_SCRIPT = "defaults read ~/Library/Preferences/com.apple.HIToolbox.plist AppleSelectedInputSources"
 
